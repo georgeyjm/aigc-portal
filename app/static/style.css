@@ -1,0 +1,132 @@
+@import url('https://rsms.me/inter/inter.css');
+
+:root {
+  --primary-color: #4a5568;
+  --secondary-color: #a0aec0;
+  --background-color: #f7fafc;
+  --font-family: 'Inter', sans-serif;
+  --font-size: 1rem;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 300px;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 2rem;
+}
+
+.back-button {
+  display: block;
+  color: #fff;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  text-decoration: none;
+}
+
+.back-button:hover {
+  text-decoration: underline;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  margin-bottom: 1rem;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-window {
+  width: 500px;
+  background-color: #fff;
+  border: 1px solid var(--secondary-color);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+
+.user-message {
+  align-self: flex-end;
+  background-color: var(--primary-color);
+  color: #fff;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.system-message {
+  align-self: flex-start;
+  background-color: var(--secondary-color);
+  color: #fff;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.user-input {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f7fafc;
+}
+
+.user-input input[type="text"] {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  margin-right: 1rem;
+}
+
+.user-input button {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.user-input button:hover {
+  background-color: #2d3748;
+}
