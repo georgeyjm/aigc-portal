@@ -1,23 +1,29 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_caching import Cache
 
 from config import app_config
+from app.extensions import db, cache, login_manager
+from app.models import *
 
 
-app = Flask(__name__, instance_relative_config=True)
-app.config.from_object(app_config['development'])
-app.config.from_pyfile('secrets.py')
+def create_app():
+    flask_app = Flask(__name__, instance_relative_config=True)
+    flask_app.config.from_object(app_config['development'])
+    flask_app.config.from_pyfile('secrets.py')
 
-db = SQLAlchemy()
-db.init_app(app)
+    # Initialize Flask extensions with app
+    cache.init_app(flask_app)
+    login_manager.init_app(flask_app)
+    db.init_app(flask_app)
+    with flask_app.app_context():
+        db.create_all()
+    
+    # Register blueprints
+    from app.main import bp as main_bp
+    from app.apis import bp as apis_bp
+    flask_app.register_blueprint(main_bp)
+    flask_app.register_blueprint(apis_bp, url_prefix='/api')
 
-cache = Cache(config={'CACHE_TYPE': 'simple'})
-cache.init_app(app)
+    # import flask_app.main.views
+    # import flask_app.apis.views
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-
-
-import app.views
+    return flask_app

@@ -1,24 +1,72 @@
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash
 
-from app import db, login_manager
+from app.extensions import db, login_manager
 
 
-class Rating(db.Model):
-    '''Model for ratings table.'''
+class User(UserMixin, db.Model):
+    '''Model for users table.'''
 
-    __tablename__ = 'ratings'
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    password = db.Column(db.String(128), nullable=False)
+
+    def __repr__(self):
+        return '<User {}>'.format(self.name)
+
+    def authenticate(self, password):
+        '''Checks if provided password matches hashed password.'''
+        return check_password_hash(self.password, password)
+
+
+class Tokens(db.Model):
+    '''Model for tokens table.'''
+
+    __tablename__ = 'tokens'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'))
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
-    parent_id = db.Column(db.Integer, db.ForeignKey('ratings.id'), nullable=True)
-    rating = db.Column(db.Integer, nullable=False)
-    comment = db.Column(db.Text, nullable=False)
-    ups = db.Column(db.Integer, nullable=False, default=0)
-    downs = db.Column(db.Integer, nullable=False, default=0)
-    created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    platform = db.Column(db.String(64), nullable=False)
+    token = db.Column(db.String(256), nullable=False)
 
     def __repr__(self):
-        return '<Rating {}>'.format(self.id)
+        return '<Token {}>'.format(self.name)
+
+
+class Chat(db.Model):
+    '''Model for chats table.'''
+
+    __tablename__ = 'chats'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    def __repr__(self):
+        return '<Chat {}>'.format(self.id)
+
+
+class ChatMessage(db.Model):
+    '''Model for chat messages table.'''
+
+    __tablename__ = 'chat_messages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    chat_id = db.Column(db.Integer, db.ForeignKey('chats.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    content = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return '<ChatMessage {}>'.format(self.id)
+
+
+# class Chat(db.Model):
+#     '''Model for chats table.'''
+
+#     __tablename__ = 'chats'
+
+#     id = db.Column(db.Integer, primary_key=True)
+
+#     def __repr__(self):
+#         return '<Chat {}>'.format(self.id)

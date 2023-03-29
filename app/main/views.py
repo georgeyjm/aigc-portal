@@ -4,10 +4,12 @@ from functools import wraps
 from flask import Response, request, send_from_directory, render_template, jsonify, redirect, url_for, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash
-
-from app import app, db, login_manager
-from app.models import *
 from sqlalchemy import and_, or_
+
+from app.main import bp
+from app.models import *
+from app.extensions import login_manager
+from app.aigc import *
 
 
 
@@ -63,14 +65,14 @@ def browser_cache(seconds):
 #################### Web Pages ####################
 
 
-@app.route('/')
+@bp.route('/')
 @browser_cache(3600)
 @return_error_html
 def search_page():
-    return render_template('search.html')
+    return render_template('index.html')
 
 
-@app.route('/login')
+@bp.route('/login')
 @return_error_html
 def login_page():
     if current_user.is_authenticated:
@@ -79,8 +81,11 @@ def login_page():
         return render_template('login.html')
 
 
-@app.route('/logout')
+@bp.route('/logout')
 @return_error_html
 def logout_page():
     logout_user()
     return redirect(url_for('search_page'))
+
+
+#################### API Endpoints ####################
