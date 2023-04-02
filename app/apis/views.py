@@ -1,4 +1,4 @@
-from flask import Response, request, jsonify
+from flask import Response, request, jsonify, current_app, stream_with_context
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app.apis import bp
@@ -12,7 +12,7 @@ from app.aigc import openai_chat
 def new_token():
     current_user_id = get_jwt_identity()
     # Data validation
-    data = request.json()
+    data = request.get_json()
     platform = data.get('platform')
     token = data.get('token')
 
@@ -54,15 +54,32 @@ def new_chat():
 def new_chat_message():
     current_user_id = get_jwt_identity()
     # Data validation
-    data = request.json()
+    data = request.get_json()
     chat_id = data.get('chat_id')
-    content = data.get('content')
+    content = str(data.get('content'))
 
-    msg_obj = ChatMessage(user_id=current_user_id, chat_id=chat_id, is_user=True, content=content)
+    chat_obj = Chat.query.get(chat_id)
+    if chat_obj is None or not content:
+        return jsonify({'message': 'Invalid data'})
+    if chat_obj.user.id != current_user_id:
+        return jsonify({'message': 'Not authorized'})
+
+    msg_obj = ChatMessage(chat_id=chat_id, is_user=True, content=content)
     db.session.add(msg_obj)
     db.session.commit()
+    history = chat_obj.to_history()
+
+    @stream_with_context
+    def wrapper(iterable):
+        try:
+            response_content = ''
+            for item in iterable:
+                response_content += item
+                yield item
+        finally:
+            msg_obj = ChatMessage(chat_id=chat_id, is_user=False, content=response_content)
+            db.session.add(msg_obj)
+            db.session.commit()
 
     # Respond
-    return Response(openai_chat())
-
-    # return jsonify({'code': 0})
+    return wrapper(openai_chat(history=history))

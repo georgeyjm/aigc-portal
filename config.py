@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 
 class Config:
@@ -17,6 +18,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=30)
 
 
 class ProductionConfig(Config):
@@ -25,6 +27,7 @@ class ProductionConfig(Config):
     ENV = 'production'
     DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)
 
 
 app_config = {

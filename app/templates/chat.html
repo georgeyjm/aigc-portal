@@ -11,39 +11,12 @@
 {% block content %}
   <!-- <h1>Welcome to My Website</h1>
   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod porttitor nisi, at tristique augue accumsan vitae.</p> -->
-  <div id="chat-container">
-    <div class="message user">
-      我如果去开一个在山西的旅行社，如何找到客户
-    </div>
-    <div class="message system">
-      要在山西开设一个旅行社并吸引客户，你可以通过以下几种方式:
-
-1. 研究山西的特色：首先需要了解山西的旅游资源，特色景点，本地文化和民俗，从而提炼旅行团的卖点。
-
-2. 定位目标群体：根据调查研究，确定目标客户群体，比如针对家庭游、蜜月游、亲子游等市场进行更细致的划分。
-
-3. 制定合理价格策略：通过了解竞争对手定价策略以及旺季和淡季的实际定价，制定出更具竞争力的价格策略。
-
-4. 创立线上专属网站和社交媒体平台：设立自己的网站和微博、微信公…
-    </div>
-    <div class="message user">
-      继续
-    </div>
-    <div class="message system">
-      众号等社交媒体平台，发布有关山西旅游信息的文章，分享游客的实地体验和照片，吸引潜在客户关注。
-
-5. 合作与联络：与当地的住宿、餐饮、交通等服务商建立良好的合作关系，以提供客户一站式旅游服务。同时，积极与其他城市的旅行社建立联系，互相推荐客户资源。
-
-6. 定制行程：针对不同需求的客户制定相应的专属行程，如文化之旅、历史之旅、自然探险等，让客户能够选择符合兴趣的旅行体验。
-
-7. 活动策划与推广：组织与山西特色相关的旅游活动，如非物质文化遗产体验、地方…
-    </div>
-  </div>
+  <div id="chat-container"></div>
 
   <div id="chat-controls-container">
     <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="" aria-label="Recipient's username" aria-describedby="button-addon2">
-      <button class="btn btn-outline-secondary" type="button" id="button-addon2">发送</button>
+      <input id="message-input" class="form-control" type="text" placeholder="" aria-label="Recipient's username" aria-describedby="button-addon2">
+      <button id="message-send-btn" class="btn btn-outline-secondary" type="button">发送</button>
     </div>
   </div>
 {% endblock %}

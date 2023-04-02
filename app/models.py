@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(128), nullable=False)
+    username = db.Column(db.String(128), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
 
     chats = db.relationship('Chat', back_populates='user')
@@ -48,6 +48,7 @@ class AIGCModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+    type = db.Column(db.String(64), nullable=False)
     # platform_id = db.Column(db.Integer, db.ForeignKey('platforms.id'))
 
     def __repr__(self):

@@ -22,7 +22,7 @@ def openai_chat(history, model='gpt-4', stream=True):
     if stream:
         for block in response:
             block_data = block.choices[0]
-            block_text = block_data['message']['content']
+            block_text = block_data['delta'].get('content', '')
             yield block_text
     else:
         response_data = response['choices'][0]

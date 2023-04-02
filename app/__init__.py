@@ -24,7 +24,4 @@ def create_app():
     flask_app.register_blueprint(main_bp)
     flask_app.register_blueprint(apis_bp, url_prefix='/api')
 
-    # import flask_app.main.views
-    # import flask_app.apis.views
-
     return flask_app
