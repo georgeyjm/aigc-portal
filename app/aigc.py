@@ -5,24 +5,31 @@ import discord
 # from config import DEFAULT_PERSONALITY, BOT_NAME_IN_PROMPT, PARTIAL_RESPONSE_INDICATOR, MAX_LENGTH
 
 
-def openai_chat(history, personality=None, model='gpt-4'):
-    formatted_history = []
-    if personality:
-        formatted_history.append({'role': 'system', 'content': personality})
-    formatted_history += [message.format('chatgpt') for message in history]
+MAX_LENGTH = 400
+PARTIAL_RESPONSE_INDICATOR = '……'
 
+
+def openai_chat(history, model='gpt-4', stream=True):
     response = openai.ChatCompletion.create(
         model=model,
-        messages=formatted_history,
-        temperature=1.2,
+        messages=history,
+        temperature=1,
         max_tokens=MAX_LENGTH,
+        stream=stream,
     )
     # TODO: Error handling
-    response_data = response['choices'][0]
-    response_text = response_data['message']['content']
-    if response_data['finish_reason'] == 'length':
-        response_text += PARTIAL_RESPONSE_INDICATOR
-    return response_text, response['usage']['completion_tokens']
+
+    if stream:
+        for block in response:
+            block_data = block.choices[0]
+            block_text = block_data['message']['content']
+            yield block_text
+    else:
+        response_data = response['choices'][0]
+        response_text = response_data['message']['content']
+        if response_data['finish_reason'] == 'length':
+            response_text += PARTIAL_RESPONSE_INDICATOR
+        return response_text # response['usage']['completion_tokens']
 
 
 def openai_complete(history, personality=None):
